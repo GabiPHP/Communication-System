@@ -24,7 +24,9 @@ with open(__file__,"r", encoding="utf-8-sig") as f:
     local = f.read().replace("\r\n", "\n").strip()
 if(remote != local):
     open(__file__, "w").write(remote)
-    print("Updated, Re-Run The File.") 
+    print("Updated, Re-Run The Program.")
+    time.sleep(5)
+    exit()
 
 
 option = input("[1] Create Room | [2] Join Room: ")
