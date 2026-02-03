@@ -4,6 +4,9 @@ import time
 import re
 import os
 import threading
+import urllib3
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 url = "https://anonimo.chat/"
 room = "597697b0fff04abcaa5fe2a95980" # Missing 4 numbers
@@ -20,7 +23,7 @@ messages = []
 
 def generateID(url):
     session = requests.Session()
-    response = session.get(url)
+    response = session.get(url, verify=False)
     phpsessid = session.cookies.get("PHPSESSID")
     match = re.search(r'const\s+csrf\s*=\s*"([^"]+)"', response.text)
     return { "PHPSESSID": phpsessid, "CSRF": match.group(1) }
@@ -28,7 +31,7 @@ def generateID(url):
 def getMessages(url,ID,room):
     cookies = {"PHPSESSID": ID["PHPSESSID"] }
     params = {"id": room}
-    response = requests.get(url, params=params, cookies=cookies)
+    response = requests.get(url, params=params, cookies=cookies, verify=False)
     data = response.json()  
     messages_html = data["messages_html"]
     pattern = re.compile(r"\[(.*?) UTC\]\s*(?:<b>(.*?)</b>:)?\s*(.*?)</div>")
@@ -39,7 +42,7 @@ def sendMessage(url,ID,room,message):
     payload = {"message": message, "csrf": ID["CSRF"]}
     cookies = {"PHPSESSID": ID["PHPSESSID"] }
     params = {"id": room} 
-    response = requests.post(url, params=params, json=payload, cookies=cookies)
+    response = requests.post(url, params=params, json=payload, cookies=cookies, verify=False)
     return response
         
 
@@ -51,7 +54,7 @@ if option == "1":
     params = {"id": room }
     payload = {"message": username, "csrf": ID["CSRF"]}
     cookies = {"PHPSESSID": ID["PHPSESSID"] }
-    response = requests.post(url+"api", params=params, json=payload, cookies=cookies)
+    response = requests.post(url+"api", params=params, json=payload, cookies=cookies, verify=False)
 
     print("Created Room:",randomRoom,"Response:",response.text)
 
@@ -61,7 +64,7 @@ if option == "2":
     params = {"id": room+roomID }
     payload = {"message": username, "csrf": ID["CSRF"]}
     cookies = {"PHPSESSID": ID["PHPSESSID"] }
-    response = requests.post(url+"api", params=params, json=payload, cookies=cookies)
+    response = requests.post(url+"api", params=params, json=payload, cookies=cookies, verify=False)
 
     print("Joined Room:",roomID,"Response:",response.text)
 
