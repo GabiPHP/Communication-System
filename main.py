@@ -19,7 +19,7 @@ ID = {}
 stop_flag = False
 
 print("Checking for updates...")
-remote = requests.get(url,verify=False).text.replace("\r\n", "\n").strip()
+remote = requests.get(githubURL,verify=False).text.replace("\r\n", "\n").strip()
 with open(__file__,"r", encoding="utf-8-sig") as f:
     local = f.read().replace("\r\n", "\n").strip()
 if(remote != local):
