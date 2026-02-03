@@ -8,6 +8,8 @@ import urllib3
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
+githubURL = "https://raw.githubusercontent.com/GabiPHP/Communication-System/refs/heads/main/main.py"
+
 url = "https://anonimo.chat/"
 room = "597697b0fff04abcaa5fe2a95980" # Missing 4 numbers
 
@@ -15,6 +17,15 @@ roomID = ""
 ID = {}
 
 stop_flag = False
+
+print("Checking for updates...")
+remote = requests.get(url).text.replace("\r\n", "\n").strip()
+with open(__file__,"r", encoding="utf-8-sig") as f:
+    local = f.read().replace("\r\n", "\n").strip()
+if(remote != local):
+    open(__file__, "w").write(remote)
+print("Updated, Re-Run The File.")
+
 
 option = input("[1] Create Room | [2] Join Room: ")
 username = input("Username: ")
